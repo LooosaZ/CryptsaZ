@@ -1,82 +1,82 @@
-# CryptsaZ - Aplicação para confidencialidade e integridade
+# CryptsaZ - Application for Confidentiality and Integrity
 
-## Descrição
-CryptsaZ é uma aplicação em Python desenvolvida para realizar diversas operações de criptografia e segurança de dados. Este projeto foi desenhado para explorar métodos de segurança digital e oferecer uma ferramenta prática para operações de criptografia simétrica e assimétrica, verificação de assinaturas digitais, geração de chaves e integridade de dados através de hashes.
+## Description
+CryptsaZ is a Python application developed to perform various cryptography and data security operations. This project was designed to explore digital security methods and offer a practical tool for symmetric and asymmetric encryption operations, digital signature verification, key generation, and data integrity through hashing.
 
-## Funcionalidades principais
-A arquitetura da aplicação é composta por diversos módulos principais, cada um desempenhando um papel crucial na segurança e integridade dos dados. Entre os módulos, destacam-se aqueles responsáveis pela criptografia, verificação de integridade e assinatura digital. A seguir, apresento as principais implementações:
-- **Criptografia simétrica**: Utiliza uma única chave simétrica para cifrar e decifrar dados, implementando algoritmos como AES-128, AES-256, ChaCha20 e TripleDES. Os principais passos incluem a geração de chaves com `generateKey()`, a cifração de dados com `encryptFile()`, a remoção de padding quando necessário e a verificação de integridade através de hashes.
-- **Criptografia assimétrica**: Utiliza duas chaves, uma pública e outra privada. A geração da chave AES-256 é feita com `get_random_bytes()`, e os dados são cifrados no modo EAX. A chave AES é cifrada com RSA-2048 através de `encryptRsa2048()`, permitindo uma troca segura de chaves.
-- **Verificação de integridade**: Implementa hashing utilizando a biblioteca hashlib para gerar e verificar hashes dos dados. Isso não apenas assegura que os dados não foram alterados, mas também suporta a criação de assinaturas digitais para verificar se realmente deriva do emissor, que serão detalhadas posteriormente.
+## Main Features
+The application architecture consists of several main modules, each playing a crucial role in data security and integrity. Among the modules, those responsible for encryption, integrity verification, and digital signature stand out. Below are the main implementations:
+- **Symmetric encryption**: Uses a single symmetric key to encrypt and decrypt data, implementing algorithms such as AES-128, AES-256, ChaCha20, and TripleDES. The main steps include key generation with `generateKey()`, data encryption with `encryptFile()`, padding removal when necessary, and integrity verification through hashes.
+- **Asymmetric encryption**: Uses two keys, one public and one private. AES-256 key generation is done with `get_random_bytes()`, and data is encrypted in EAX mode. The AES key is encrypted with RSA-2048 through `encryptRsa2048()`, enabling secure key exchange.
+- **Integrity verification**: Implements hashing using the hashlib library to generate and verify data hashes. This not only ensures that data has not been altered, but also supports the creation of digital signatures to verify that it truly originates from the sender, which will be detailed later.
 
-## Funcionalidades secundárias
-Além das implementações principais, o sistema oferece diversas funcionalidades que melhoram a usabilidade e a segurança, incluindo:
-- Identificação da extensão do ficheiro
-- Geração e armazenamento de pares de chaves RSA
-- Pesquisa automática de ficheiros
-- Remoção de ficheiros residuais
-- Interface para carregamento de ficheiros via tkinter
-- Instalação automática de dependências
-- Gestão de chaves públicas em menu
+## Secondary Features
+In addition to the main implementations, the system offers various features that improve usability and security, including:
+- File extension identification
+- Generation and storage of RSA key pairs
+- Automatic file search
+- Removal of residual files
+- File upload interface via tkinter
+- Automatic dependency installation
+- Public key management menu
 
-## Estrutura do projeto
-- **/assets**: Contém recursos auxiliares e ficheiros usados pela aplicação.
-- **encryptAsy.py / decryptAsy.py**: Scripts para operações de criptografia e descriptografia assimétrica.
-- **encryptSy.py / decryptSy.py**: Scripts para operações de criptografia e descriptografia simétrica.
-- **keyGenerator.py**: Ferramenta para gerar chaves de criptografia.
-- **hashVerifier.py**: Utilitário para verificação de integridade dos dados usando hashes.
-- **verifyKeys.py**: Ferramenta para verificação da validade das chaves de criptografia.
-- **verifySignature.py**: Utilitário para verificação de assinaturas digitais.
-- **logo.py**: Configura o logotipo ou a interface gráfica do projeto.
-- **main.py**: Interface principal para aceder às funcionalidades do projeto.
-- **requirements.txt**: Ficheiro que lista as dependências externas necessárias para executar o projeto.
+## Project Structure
+- **/assets**: Contains auxiliary resources and files used by the application.
+- **encryptAsy.py / decryptAsy.py**: Scripts for asymmetric encryption and decryption operations.
+- **encryptSy.py / decryptSy.py**: Scripts for symmetric encryption and decryption operations.
+- **keyGenerator.py**: Tool for generating encryption keys.
+- **hashVerifier.py**: Utility for verifying data integrity using hashes.
+- **verifyKeys.py**: Tool for verifying the validity of encryption keys.
+- **verifySignature.py**: Utility for verifying digital signatures.
+- **logo.py**: Configures the logo or graphical interface of the project.
+- **main.py**: Main interface for accessing the project's features.
+- **requirements.txt**: File that lists the external dependencies needed to run the project.
 
-## Pré-requisitos
-- **Python 3.8 ou superior**: Certifique-se de que o Python está instalado.
-    - Pode verificar a versão instalada com o comando: `python --version`.
+## Prerequisites
+- **Python 3.8 or higher**: Ensure Python is installed.
+    - You can check the installed version with the command: `python --version`.
 
-## Instalação das dependências
-### Modo automático
-Para facilitar este processo, o programa utiliza um ficheiro chamado `requirements.txt`, que lista todos os pacotes necessários. Assim, sempre que o programa é iniciado, ele verifica e instala automaticamente as dependências:
-### Modo manual
-Se preferir, pode instalar cada biblioteca manualmente com um destes scripts:
+## Installing Dependencies
+### Automatic Mode
+To simplify this process, the program uses a file called `requirements.txt`, which lists all necessary packages. Thus, whenever the program starts, it automatically checks and installs the dependencies:
+### Manual Mode
+If you prefer, you can install each library manually with one of these scripts:
 ```bash
 pip install -r requirements.txt
 pip install cryptography qrcode Pillow pycryptodome tk windows-curses tqdm
 ```
 
-### Bibliotecas externas
-- **cryptography**: Para operações de criptografia e descriptografia avançada.
-- **qrcode**: Para geração de códigos QR, permitindo a partilha de chaves ou mensagens de forma segura.
-- **Pillow**: Utilizada para manipulação de imagens, especialmente no suporte a códigos QR.
-- **pycryptodome**: Fornece implementações de algoritmos de criptografia de alto desempenho.
-- **tk**: Interface gráfica Tkinter, usada para implementar a interface interativa do projeto.
+### External Libraries
+- **cryptography**: For advanced encryption and decryption operations.
+- **qrcode**: For generating QR codes, enabling secure sharing of keys or messages.
+- **Pillow**: Used for image manipulation, especially in QR code support.
+- **pycryptodome**: Provides high-performance implementations of cryptography algorithms.
+- **tk**: Tkinter graphical interface, used to implement the interactive interface of the project.
 
-## Como usar
-### Configuração inicial
-Instale as dependências usando o comando `pip install -r requirements.txt` para garantir que todos os pacotes necessários estão disponíveis.
-### Iniciar a interface de consola
-O ponto de entrada do projeto é o ficheiro `main.py`, que proporciona uma interface de consola interativa. Pode ser executado com o comando:
+## How to Use
+### Initial Setup
+Install dependencies using the command `pip install -r requirements.txt` to ensure all necessary packages are available.
+### Starting the Console Interface
+The entry point of the project is the `main.py` file, which provides an interactive console interface. It can be executed with the command:
 ```bash
 python main.py
 ```
-### Navegação na interface de consola
-Uma vez iniciado o `main.py`, a interface de consola guiará o utilizador através das opções de criptografia, descriptografia, verificação e geração de chaves. Selecione a opção desejada e siga as instruções para concluir a operação.
+### Navigating the Console Interface
+Once `main.py` is started, the console interface will guide the user through encryption, decryption, verification, and key generation options. Select the desired option and follow the instructions to complete the operation.
 
-### Exemplos de uso
-Para realizar operações específicas, siga os passos conforme guiado pela interface de consola no `main.py`. Seguem alguns exemplos típicos:
-- **Symmetric cryptography**: Esta opção permite ao utilizador encriptar ficheiros usando criptografia simétrica, provavelmente utilizando um algoritmo como o AES. A criptografia simétrica é útil para proteger rapidamente os dados com uma única chave de encriptação.
-- **Asymmetric cryptography (RSA)**: Aqui, o utilizador pode encriptar ficheiros utilizando criptografia assimétrica com o algoritmo RSA. Este tipo de criptografia utiliza um par de chaves (pública e privada), permitindo que dados encriptados com uma chave pública só possam ser decifrados pela chave privada correspondente, ideal para partilha de informações seguras.
-- **Decrypt symmetric encryption**: Esta funcionalidade serve para decifrar ficheiros que foram encriptados com criptografia simétrica. O utilizador precisa de fornecer a mesma chave simétrica que foi utilizada para encriptar o ficheiro originalmente, para que os dados possam ser restaurados ao seu estado original.
-- **Decrypt asymmetric encryption**: Esta opção permite ao utilizador decifrar ficheiros encriptados com criptografia assimétrica (RSA). O ficheiro encriptado com uma chave pública pode ser decifrado aqui, utilizando a chave privada correspondente, garantindo que apenas o detentor da chave privada possa aceder ao conteúdo original.
-- **Generate encryption keys**: Aqui, o utilizador pode gerar um novo par de chaves para criptografia assimétrica (RSA). Esta funcionalidade cria uma chave pública e uma chave privada, essenciais para o processo de encriptação e assinatura digital.
-- **Public keys management**: Esta funcionalidade permite ao utilizador gerir chaves públicas. O utilizador pode adicionar, remover ou visualizar chaves públicas de outros utilizadores, o que facilita a partilha de informações encriptadas de forma segura com múltiplos contactos.
-- **Fix Dependencies**: Esta opção destina-se a resolver possíveis dependências de software necessárias para a aplicação funcionar corretamente. Pode envolver a instalação ou atualização de bibliotecas e ferramentas que a aplicação utiliza.
-- **Exit**: Esta opção encerra a aplicação.
+### Usage Examples
+To perform specific operations, follow the steps as guided by the console interface in `main.py`. Here are some typical examples:
+- **Symmetric cryptography**: This option allows the user to encrypt files using symmetric cryptography, likely using an algorithm like AES. Symmetric encryption is useful for quickly protecting data with a single encryption key.
+- **Asymmetric cryptography (RSA)**: Here, the user can encrypt files using asymmetric cryptography with the RSA algorithm. This type of encryption uses a pair of keys (public and private), allowing data encrypted with a public key to only be decrypted by the corresponding private key, ideal for secure information sharing.
+- **Decrypt symmetric encryption**: This functionality is used to decrypt files that were encrypted with symmetric cryptography. The user needs to provide the same symmetric key that was used to encrypt the file originally, so that the data can be restored to its original state.
+- **Decrypt asymmetric encryption**: This option allows the user to decrypt files encrypted with asymmetric cryptography (RSA). The file encrypted with a public key can be decrypted here using the corresponding private key, ensuring that only the holder of the private key can access the original content.
+- **Generate encryption keys**: Here, the user can generate a new pair of keys for asymmetric cryptography (RSA). This functionality creates a public key and a private key, essential for the encryption and digital signature process.
+- **Public keys management**: This functionality allows the user to manage public keys. The user can add, remove, or view public keys from other users, which facilitates secure sharing of encrypted information with multiple contacts.
+- **Fix Dependencies**: This option is intended to resolve possible software dependencies needed for the application to work correctly. It may involve installing or updating libraries and tools that the application uses.
+- **Exit**: This option closes the application.
 
 ## Graphical UI (Quick start)
 
-This project includes a small PySimpleGUI-based prototype GUI. To run it on Windows (the GUI uses tkinter under the hood) do the following from the project root inside the project's virtual environment:
+This project includes a tkinter-based GUI. To run it on Windows from the project root inside the project's virtual environment:
 
 ```powershell
 # Set TCL_LIBRARY so tkinter can find the Tcl/Tk runtime (adjust path if your Python is installed elsewhere)
@@ -90,13 +90,13 @@ Notes:
 - There's a "Copy Key" button that copies the key hex to the clipboard.
 - Actions that modify or produce files prompt for confirmation before saving.
 
-If you prefer to run without the virtualenv, ensure PySimpleGUI and tkinter are available on your system Python and adapt the TCL_LIBRARY path accordingly.
+If you prefer to run without the virtualenv, ensure tkinter is available on your system Python and adapt the TCL_LIBRARY path accordingly.
 
-## Contribuições
-Este projeto é de código aberto e as contribuições são bem-vindas. Para contribuir:
-1. Faça um fork do projeto.
-2. Crie uma nova branch com as suas alterações.
-3. Abra um pull request com uma descrição detalhada da contribuição.
+## Contributing
+This project is open source and contributions are welcome. To contribute:
+1. Fork the project.
+2. Create a new branch with your changes.
+3. Open a pull request with a detailed description of the contribution.
 
-## Licença
-Este projeto é distribuído sob a licença MIT. Consulte o ficheiro LICENSE para mais detalhes.
+## License
+This project is distributed under the MIT license. Consult the LICENSE file for more details.
