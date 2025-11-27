@@ -194,10 +194,53 @@ class CryptsaZApp(tk.Tk):
 
     # Browse helpers
     def _browse_sym_in(self):
-        p = filedialog.askopenfilename()
-        if p:
+        """Show a small modal dialog allowing user to pick a file or a folder."""
+        parent = self
+
+        # container for the selection result
+        selection = {'path': None}
+
+        def choose_file():
+            p = filedialog.askopenfilename(parent=parent)
+            if p:
+                selection['path'] = p
+                dlg.destroy()
+
+        def choose_folder():
+            p = filedialog.askdirectory(parent=parent)
+            if p:
+                selection['path'] = p
+                dlg.destroy()
+
+        def cancel():
+            dlg.destroy()
+
+        # create modal dialog
+        dlg = tk.Toplevel(parent)
+        dlg.title('Select input')
+        dlg.transient(parent)
+        dlg.resizable(False, False)
+        dlg.grab_set()
+
+        ttk.Label(dlg, text='Select a file or a folder to use as input:').grid(row=0, column=0, columnspan=3, padx=12, pady=(12,6))
+
+        ttk.Button(dlg, text='Select File', command=choose_file).grid(row=1, column=0, padx=8, pady=12)
+        ttk.Button(dlg, text='Select Folder', command=choose_folder).grid(row=1, column=1, padx=8, pady=12)
+        ttk.Button(dlg, text='Cancel', command=cancel).grid(row=1, column=2, padx=8, pady=12)
+
+        # center dialog over parent
+        parent.update_idletasks()
+        dlg.update_idletasks()
+        pw = parent.winfo_width(); ph = parent.winfo_height()
+        px = parent.winfo_rootx(); py = parent.winfo_rooty()
+        dw = dlg.winfo_reqwidth(); dh = dlg.winfo_reqheight()
+        dlg.geometry(f"+{px + (pw-dw)//2}+{py + (ph-dh)//2}")
+
+        parent.wait_window(dlg)
+
+        if selection['path']:
             self.sym_in.delete(0, 'end')
-            self.sym_in.insert(0, p)
+            self.sym_in.insert(0, selection['path'])
 
     def _browse_asy_in(self):
         """Show a small modal dialog allowing user to pick a file or a folder."""
@@ -344,28 +387,90 @@ class CryptsaZApp(tk.Tk):
         key_hex = self.custom_key.get().strip() if self.key_mode.get() == 'custom' else None
         outdir = self.outdir_entry.get().strip() or None
         self._log(self.sym_log, f'Starting symmetric encryption: {infile} -> {algo}')
-        res = core_api.symmetric_encrypt(infile, algo, key=bytes.fromhex(key_hex) if key_hex else None, output_dir=outdir)
-        if res.get('success'):
-            self._log(self.sym_log, f'Encryption finished. Output: {res.get("output_file")}')
-            if res.get('key_hex'):
-                self._log(self.sym_log, f'Key (hex): {res.get("key_hex")}')
-        else:
-            self._log(self.sym_log, f'Error: {res.get("error")}')
-            if res.get('trace'):
-                self._log(self.sym_log, res.get('trace'))
+        
+        try:
+            # Check if input is a directory
+            if os.path.isdir(infile):
+                self._log(self.sym_log, f'Processing folder: {infile}')
+                files = sorted([f for f in os.listdir(infile) if os.path.isfile(os.path.join(infile, f))])
+                
+                success_count = 0
+                error_count = 0
+                
+                for filename in files:
+                    filepath = os.path.join(infile, filename)
+                    self._log(self.sym_log, f'Encrypting file: {filename}')
+                    res = core_api.symmetric_encrypt(filepath, algo, key=bytes.fromhex(key_hex) if key_hex else None, output_dir=outdir)
+                    if res.get('success'):
+                        success_count += 1
+                        self._log(self.sym_log, f'  ✓ {filename} encrypted')
+                        if res.get('key_hex') and success_count == 1:
+                            self._log(self.sym_log, f'Key (hex): {res.get("key_hex")}')
+                    else:
+                        error_count += 1
+                        self._log(self.sym_log, f'  ✗ {filename} failed: {res.get("error") or "unknown"}')
+                        if res.get('trace'):
+                            self._log(self.sym_log, res.get('trace'))
+                
+                self._log(self.sym_log, f'Folder encryption finished. Success: {success_count}, Errors: {error_count}')
+            else:
+                res = core_api.symmetric_encrypt(infile, algo, key=bytes.fromhex(key_hex) if key_hex else None, output_dir=outdir)
+                if res.get('success'):
+                    self._log(self.sym_log, f'Encryption finished. Output: {res.get("output_file")}')
+                    if res.get('key_hex'):
+                        self._log(self.sym_log, f'Key (hex): {res.get("key_hex")}')
+                else:
+                    self._log(self.sym_log, f'Error: {res.get("error")}')
+                    if res.get('trace'):
+                        self._log(self.sym_log, res.get('trace'))
+        except PermissionError as e:
+            self._log(self.sym_log, f'Permission Denied: {str(e)}')
+            self._log(self.sym_log, 'Try running the application as Administrator.')
+        except Exception as e:
+            self._log(self.sym_log, f'Unexpected error: {str(e)}')
 
     def _sym_decrypt(self):
         infile = self.sym_in.get().strip()
         key_hex = self.custom_key.get().strip() if self.key_mode.get() == 'custom' else None
         outdir = self.outdir_entry.get().strip() or None
         self._log(self.sym_log, f'Starting symmetric decryption: {infile}')
-        res = core_api.symmetric_decrypt(infile, key_hex=key_hex, output_dir=outdir)
-        if res.get('success'):
-            self._log(self.sym_log, f'Decryption finished. Output: {res.get("output_file")}')
-        else:
-            self._log(self.sym_log, f'Error: {res.get("error")}')
-            if res.get('trace'):
-                self._log(self.sym_log, res.get('trace'))
+        
+        try:
+            # Check if input is a directory
+            if os.path.isdir(infile):
+                self._log(self.sym_log, f'Processing folder: {infile}')
+                files = sorted([f for f in os.listdir(infile) if os.path.isfile(os.path.join(infile, f))])
+                
+                success_count = 0
+                error_count = 0
+                
+                for filename in files:
+                    filepath = os.path.join(infile, filename)
+                    self._log(self.sym_log, f'Decrypting file: {filename}')
+                    res = core_api.symmetric_decrypt(filepath, key_hex=key_hex, output_dir=outdir)
+                    if res.get('success'):
+                        success_count += 1
+                        self._log(self.sym_log, f'  ✓ {filename} decrypted')
+                    else:
+                        error_count += 1
+                        self._log(self.sym_log, f'  ✗ {filename} failed: {res.get("error") or "unknown"}')
+                        if res.get('trace'):
+                            self._log(self.sym_log, res.get('trace'))
+                
+                self._log(self.sym_log, f'Folder decryption finished. Success: {success_count}, Errors: {error_count}')
+            else:
+                res = core_api.symmetric_decrypt(infile, key_hex=key_hex, output_dir=outdir)
+                if res.get('success'):
+                    self._log(self.sym_log, f'Decryption finished. Output: {res.get("output_file")}')
+                else:
+                    self._log(self.sym_log, f'Error: {res.get("error")}')
+                    if res.get('trace'):
+                        self._log(self.sym_log, res.get('trace'))
+        except PermissionError as e:
+            self._log(self.sym_log, f'Permission Denied: {str(e)}')
+            self._log(self.sym_log, 'Try running the application as Administrator.')
+        except Exception as e:
+            self._log(self.sym_log, f'Unexpected error: {str(e)}')
 
     def _asy_encrypt(self):
         infile = self.asy_in.get().strip()
