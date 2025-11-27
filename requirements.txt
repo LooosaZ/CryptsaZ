@@ -1,0 +1,7 @@
+cryptography
+qrcode
+Pillow
+pycryptodome
+windows-curses
+tqdm
+tk

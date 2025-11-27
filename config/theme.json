@@ -1,0 +1,21 @@
+{
+  "dark_mode": {
+    "bg": "#2c2c2c",
+    "fg": "#e0e0e0",
+    "button_bg": "#f84600",
+    "button_fg": "#ffffff",
+    "entry_bg": "#2d2d2d",
+    "entry_fg": "#e0e0e0",
+    "text_bg": "#252525",
+    "text_fg": "#e0e0e0",
+    "accent": "#f84600"
+  },
+  "button": {
+    "relief": "raised",
+    "borderwidth": 1
+  },
+  "padding": {
+    "standard": 10,
+    "large": 15
+  }
+}
